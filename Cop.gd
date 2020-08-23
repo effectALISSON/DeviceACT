@@ -16,6 +16,23 @@ func _physics_process(delta):
 	elif getHelperAxis() == has_helper.axis.LEFT:
 		flip = true
 	
+	if area_target:
+		if area_target.is_in_group("cop") and has_target == area_target:
+			setTargetTo(area_target, states.ANGRY)
+			
+		if area_target.is_in_group("player"):
+			on_target_area = true
+			if area_target.crimes > 0:
+				setTargetTo(area_target, states.ANGRY)
+			else:
+				if area_target.is_shoot == true:
+					setTargetTo(area_target, states.ANGRY)
+				
+		if area_target.is_in_group("car"):
+			if area_target.car_crimes > 0:
+				if area_target.has_driver:
+					setTargetTo(area_target.has_driver, states.ANGRY)
+	
 	$AnimatedSprite.flip_h = flip
 	
 	if getVelocity():
@@ -27,13 +44,13 @@ func _physics_process(delta):
 	pass
 
 func _on_Area2D_body_entered(body):
-	if body.is_in_group("player"):
-		on_target_area = true
-		if body.has_gun:
-			setTargetTo(body, states.ANGRY)
-		else:
-			setTargetTo(body, states.WARNING)
 	area_target = body
+	if area_target.is_in_group("player"):
+		on_target_area = true
+		if area_target.has_gun:
+			if area_target.has_gun['type'] == Data.item_type.GUN:
+				if area_target.crimes < 1:
+					setTargetTo(area_target, states.WARNING)
 	pass # Replace with function body.
 
 

@@ -31,3 +31,8 @@ func _on_Bullet_body_entered(body):
 			body.setHarmHealth(by.has_gun['bullet']['bullet_damage'], by, body.states.ANGRY)
 	queue_free()
 	pass # Replace with function body.
+
+
+func _on_VisibilityNotifier2D_screen_exited():
+	queue_free()
+	pass # Replace with function body.

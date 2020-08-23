@@ -54,6 +54,10 @@ var gun_bullets = 100
 
 var loot = []
 
+var is_shoot = false
+
+var crimes = 0
+
 func addHelperNode():
 	var data = helper_node.instance()
 	has_helper = data
@@ -66,7 +70,7 @@ func addHelperNode():
 
 func followTarget(target, _speed):
 	if target:
-		velocity = ((target.position - position) * _speed) + Vector2(0.3, 0.3)
+		velocity = ((target.position - position) * _speed) + Vector2(rand_range(-0.800, -0.800), rand_range(-0.300, 0.300))
 	else:
 		velocity = Vector2(0, 0)
 	pass
@@ -94,8 +98,6 @@ func setHelperLookAt(target):
 	if has_helper:
 		if target:
 			has_helper.setLookAt(target)
-		else:
-			has_helper.setLookAt(Vector2.ZERO)
 	pass
 
 func getHelperAxis():
@@ -116,13 +118,24 @@ func fireBullet(_bullet, helper, gun):
 			if gun['type'] == Data.item_type.GUN:
 				if may_fire == true:
 					if gun_bullets > 0:
+						var bullet_own = null
 						var data = _bullet.instance()
-						data.setValues(helper.rotation_degrees, gun['bullet']['bullet_speed'], helper.getPosition(), gun['bullet'], self)
+						
+						if not  npc == npc_type.COP:
+							bullet_own = self
+						else:
+							if Data.configs['intolerant_police'] == false:
+								bullet_own = null
+							else:
+								bullet_own = self
+						
+						data.setValues(helper.rotation_degrees, gun['bullet']['bullet_speed'], helper.getPosition(), gun['bullet'], bullet_own)
 						
 						get_parent().add_child(data)
 						
 						may_fire = false
 						gun_bullets -= gun['bullet']['use']
+						is_shoot = true
 						
 						if self.is_in_group("player"):
 							get_node("Animations/AnimationPlayer").play("shake")
@@ -134,7 +147,7 @@ func dropLoot(item_id):
 		i0.item_id = item_id
 		i0.position = position + Vector2(rand_range(0, 10), rand_range(0, 24))
 		get_parent().add_child(i0)
-		print(str(item_id) + " Dropped loot item: " + str(Data.items[item_id]['name']))
+		#print(str(item_id) + " Dropped loot item: " + str(Data.items[item_id]['name']))
 	pass
 
 func die(heal):
@@ -169,7 +182,7 @@ func _physics_process(delta):
 			setHelperLookAt(has_target)
 			match npc:
 				npc_type.COP:
-					if on_target_area:
+					if has_target:
 						fireBullet(bullet_node, has_helper, has_gun)
 	
 	setHelperGun(has_gun)
@@ -199,6 +212,7 @@ func _physics_process(delta):
 			else:
 				may_fire = true
 				ww = 0
+				is_shoot = false
 	
 	die(health)
 	

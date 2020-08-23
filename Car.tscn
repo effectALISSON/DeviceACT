@@ -13,10 +13,12 @@ height = 17.0664
 script = ExtResource( 2 )
 
 [node name="Sprite" type="Sprite" parent="."]
+position = Vector2( 8, 0 )
 texture = ExtResource( 1 )
 region_enabled = true
 region_rect = Rect2( 224, 0, 32, 16 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2( 8, 0 )
 rotation = 1.5708
 shape = SubResource( 1 )

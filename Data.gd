@@ -1,5 +1,11 @@
 extends Node
 
+var configs = {
+	"intolerant_police": false,
+	"camera_zoom": Vector2(0.25, 0.25),
+	"smoo": false
+}
+
 var bullets = {
 	0: {
 		'sprite': Rect2(16,0,16,16),

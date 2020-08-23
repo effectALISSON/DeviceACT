@@ -45,6 +45,8 @@ func _physics_process(delta):
 	
 	setHelperLookAt(m_position)
 	
+	get_node("Camera2D").zoom = Data.configs['camera_zoom']
+	get_node("Camera2D").smoothing_enabled = Data.configs['smoo']
 		
 	get_node("HUD/Icons/Gun").region_rect = has_gun['sprite']
 	

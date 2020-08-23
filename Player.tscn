@@ -70,7 +70,6 @@ shape = SubResource( 6 )
 [node name="Camera2D" type="Camera2D" parent="."]
 current = true
 zoom = Vector2( 0.25, 0.25 )
-smoothing_enabled = true
 
 [node name="helper" type="Node2D" parent="."]
 
