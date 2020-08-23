@@ -10,7 +10,8 @@ enum vehicle_type {
 var vehicle_data = {
 	0:{
 		"name": "Brown",
-		"max_speed": 300,
+		"max_speed": 2.0,
+		"speed": 0.05,
 		"max_rot": 0.8,
 		"sprite": Rect2(224, 0, 32,16),
 		"type": vehicle_type.CAR
@@ -19,7 +20,7 @@ var vehicle_data = {
 
 var velocity = Vector2()
 var speed = 100
-var max_speed = 0.800 * speed
+var max_speed = 0.08 * speed
 
 var data = null
 
@@ -50,11 +51,15 @@ func enterVehicle(driver):
 
 func exitVehicle(driver):
 	driver.visible = true
-	driver.velocity += Vector2(32, 32)
+	driver.position += Vector2(16, 16)
 	driver.on_car = false
 	if driver == has_driver:
 		driver.get_node("CollisionShape2D").disabled = false
 		has_driver = null
+	pass
+
+func interpolate(speed):
+	spd += -(speed * 0.08)
 	pass
 
 func _physics_process(delta):
@@ -70,36 +75,39 @@ func _physics_process(delta):
 		
 		vehicle = data['type']
 		
-		if velocity.x == 0 and velocity.y == 0:
-			if spd != 0:
-				spd = -(spd * 0.200)
-		
 		if has_driver:
 			if Input.is_action_pressed("ui_up"):
 				if spd < data['max_speed']:
-					spd += 1
+					spd += data['speed']
 			elif Input.is_action_pressed("ui_down"):
 				if spd > -data['max_speed']:
-					spd -= 1
+					spd -= data['speed']
 			else:
-				if spd > 0:
-					spd -= 1
-				elif spd < 0:
-					spd += 1
+				interpolate(spd)
 					
-			if velocity != Vector2():
+			if not int(spd) == 0:
 				if Input.is_action_pressed("ui_left"):
 					rotation_degrees -= (data['max_rot'] + (spd * 0.008))
 				elif Input.is_action_pressed("ui_right"):
 					rotation_degrees += (data['max_rot'] + (spd * 0.008))
 		else:
-			if spd > 0:
-				spd -= 1
-			elif spd < 0:
-				spd += 1
-						
+			interpolate(spd)
+		
 		velocity = Vector2(spd, 0)
 	
 	velocity = velocity.rotated(rotation)
-	velocity = move_and_slide(velocity, Vector2(0, -1))
+	var hit = move_and_collide(velocity)
+	
+	if data:
+		if hit:
+			if has_driver:
+				if int(spd) >= data['max_speed'] or int(spd) <= -data['max_speed']:
+					if has_driver.is_in_group("player"):
+						has_driver.get_node("Animations/AnimationPlayer").play("shake")
+					
+					if hit.collider.is_in_group("cop"):
+						hit.collider.setHarmHealth(1000, has_driver, hit.collider.state)
+					
+					if hit.collider.is_in_group("player"):
+						hit.collider.setHarmHealth(1000, has_driver, hit.collider.state)
 	pass

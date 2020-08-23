@@ -3,9 +3,10 @@ extends "res://NPC.gd"
 var flip = false
 var animation = "idle"
 
+var area_target = null
+
 func _ready():
 	has_gun = Data.items[0]
-	max_speed = 0.800 * 2
 	npc = npc_type.COP
 	pass
 
@@ -32,10 +33,12 @@ func _on_Area2D_body_entered(body):
 			setTargetTo(body, states.ANGRY)
 		else:
 			setTargetTo(body, states.WARNING)
+	area_target = body
 	pass # Replace with function body.
 
 
 func _on_Area2D_body_exited(body):
 	if body.is_in_group("player"):
 		on_target_area = false
+	area_target = null
 	pass # Replace with function body.

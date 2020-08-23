@@ -1,8 +1,9 @@
-[gd_scene load_steps=10 format=2]
+[gd_scene load_steps=12 format=2]
 
 [ext_resource path="res://_artwork_items_0.png" type="Texture" id=1]
 [ext_resource path="res://Player.gd" type="Script" id=2]
 [ext_resource path="res://_artwork_sprites.png" type="Texture" id=3]
+[ext_resource path="res://_artwork_hud_0.png" type="Texture" id=4]
 
 [sub_resource type="AtlasTexture" id=1]
 atlas = ExtResource( 3 )
@@ -37,6 +38,22 @@ animations = [ {
 radius = 2.86477
 height = 1.94815
 
+[sub_resource type="Animation" id=7]
+resource_name = "shake"
+length = 0.2
+tracks/0/type = "value"
+tracks/0/path = NodePath("../Camera2D:offset")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.1, 0.2 ),
+"transitions": PoolRealArray( 1, 1, 1 ),
+"update": 0,
+"values": [ Vector2( 0, -3 ), Vector2( 0, -2 ), Vector2( 0, 0 ) ]
+}
+
 [node name="Player" type="KinematicBody2D" groups=[
 "player",
 ]]
@@ -63,4 +80,26 @@ texture = ExtResource( 1 )
 region_enabled = true
 
 [node name="Position2D" type="Position2D" parent="helper"]
-position = Vector2( 18, 0 )
+position = Vector2( 12, 0 )
+
+[node name="HUD" type="CanvasLayer" parent="."]
+
+[node name="Icons" type="Node2D" parent="HUD"]
+
+[node name="Buttons" type="Sprite" parent="HUD/Icons"]
+position = Vector2( 61.327, 58.8691 )
+scale = Vector2( 3, 3 )
+texture = ExtResource( 4 )
+region_enabled = true
+region_rect = Rect2( 0, 0, 32, 32 )
+
+[node name="Gun" type="Sprite" parent="HUD/Icons"]
+position = Vector2( 156, 456 )
+scale = Vector2( 5, 5 )
+texture = ExtResource( 1 )
+region_enabled = true
+
+[node name="Animations" type="Node2D" parent="."]
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Animations"]
+anims/shake = SubResource( 7 )

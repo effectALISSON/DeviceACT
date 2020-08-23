@@ -4,7 +4,8 @@ var flip = false
 var animation = "idle"
 
 func _ready():
-	speed = 130
+	max_speed = 0.900
+	has_gun = Data.items[0]
 	pass
 
 func _physics_process(delta):
@@ -42,19 +43,10 @@ func _physics_process(delta):
 		if on_car == false:
 			fireBullet(bullet_node, has_helper, has_gun)
 	
-	"""if hand:
-		get_node("helper/GunSprite").visible = true
-		get_node("helper/GunSprite").region_rect = hand['sprite']
-		
-		if Input.is_action_pressed("ui_fire"):
-			var p = Projectile.new()
-			p.fireProjectile(hand, hand['bullet']['bullet_speed'], get_node("helper").rotation_degrees, get_node("helper/Position2D").global_position, self, get_parent())
-	
-	else:
-		get_node("helper/GunSprite").visible = false"""
-	
-	has_gun = Data.items[0]
 	setHelperLookAt(m_position)
+	
+		
+	get_node("HUD/Icons/Gun").region_rect = has_gun['sprite']
 	
 	if Input.is_action_just_pressed("ui_x"):
 		if ray_collide:

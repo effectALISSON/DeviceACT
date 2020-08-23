@@ -28,6 +28,6 @@ func _physics_process(delta):
 func _on_Bullet_body_entered(body):
 	if body.is_in_group("cop"):
 		if by:
-			body.setHarmHealth(by.has_gun, by, body.states.ANGRY)
+			body.setHarmHealth(by.has_gun['bullet']['bullet_damage'], by, body.states.ANGRY)
 	queue_free()
 	pass # Replace with function body.
